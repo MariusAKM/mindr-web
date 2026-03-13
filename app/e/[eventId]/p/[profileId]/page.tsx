@@ -100,9 +100,9 @@ export default async function EventProfilePage({
           {event?.name ?? "Ukendt event"}
         </p>
 
-        {/* Open in app button */}
+        {/* Open in app button — universal link åbner appen direkte hvis installeret */}
         <a
-          href={`mindr://e/${eventId}/p/${profileId}`}
+          href={`https://mindr.dk/e/${eventId}/p/${profileId}`}
           style={{
             display: "block",
             background: theme,
