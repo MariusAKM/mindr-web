@@ -1,0 +1,16 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["R3G6KKKSD9.com.mycompany.mindrclip"],
+        "components": [
+          { "/": "/t/*", "comment": "NFC tag resolver" },
+          { "/": "/e/*", "comment": "Event/profile canonical links" }
+        ]
+      }
+    ]
+  },
+  "appclips": {
+    "apps": ["R3G6KKKSD9.com.mycompany.mindrclip.Clip"]
+  }
+}
