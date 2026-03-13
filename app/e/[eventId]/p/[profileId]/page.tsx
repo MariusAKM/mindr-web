@@ -7,14 +7,27 @@ export default async function EventProfilePage({
 }) {
   const { eventId, profileId } = await params;
 
-  // Fetch event + profile in parallel
-  const [eventRes, profileRes] = await Promise.all([
+  // Fetch event + event_profile (ny arkitektur) parallelt
+  const [eventRes, epRes] = await Promise.all([
     supabase.from("events").select("id, name, background_url, theme_color").eq("id", eventId).single(),
-    supabase.from("profiles").select("id, display_name, avatar_url").eq("id", profileId).single(),
+    supabase
+      .from("event_profiles")
+      .select("id, display_name, status, claimed_by_user_id, profiles(display_name, avatar_url)")
+      .eq("id", profileId)
+      .maybeSingle(),
   ]);
 
-  const event   = eventRes.data;
-  const profile = profileRes.data;
+  const event = eventRes.data;
+
+  // Byg profil-objekt: brug event_profile.display_name, og avatar fra claimed bruger
+  const ep = epRes.data;
+  const claimedProfile = ep?.profiles
+    ? (Array.isArray(ep.profiles) ? ep.profiles[0] : ep.profiles)
+    : null;
+  const profile = {
+    display_name: ep?.display_name ?? claimedProfile?.display_name ?? null,
+    avatar_url:   (claimedProfile as { avatar_url?: string } | null)?.avatar_url ?? null,
+  };
   const bg      = event?.background_url ?? null;
   const theme   = event?.theme_color ?? "#0E410E";
 
