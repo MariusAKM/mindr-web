@@ -26,11 +26,12 @@ export default async function EventTagPage({
     .limit(1)
     .maybeSingle();
 
-  // Fetch event for branding
+  // Fetch event for branding — lookup by short_id (numeric) or UUID (fallback)
+  const isNumeric = /^\d+$/.test(eventId);
   const { data: event } = await supabase
     .from("events")
     .select("id, name, background_url, theme_color")
-    .eq("id", eventId)
+    .eq(isNumeric ? "short_id" : "id", eventId)
     .maybeSingle();
 
   const bg    = event?.background_url ?? null;
@@ -46,11 +47,12 @@ export default async function EventTagPage({
   const displayName = ep?.display_name ?? claimedProfile?.display_name ?? null;
   const avatarUrl   = (claimedProfile as { avatar_url?: string } | null)?.avatar_url ?? null;
 
-  // Build deep link — use resolved profile ID if available
+  // Build deep link — always use real event UUID for app deep link
+  const realEventId = event?.id ?? eventId;
   const resolvedProfileId = ep?.id ?? tag?.id;
   const appUrl = resolvedProfileId
-    ? `mindr://open?event=${eventId}&profile=${resolvedProfileId}`
-    : `mindr://open?event=${eventId}`;
+    ? `mindr://open?event=${realEventId}&profile=${resolvedProfileId}`
+    : `mindr://open?event=${realEventId}`;
 
   return (
     <main

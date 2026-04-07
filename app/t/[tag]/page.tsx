@@ -18,26 +18,31 @@ export default async function TagPage({
       event_profiles (
         id,
         event_id
+      ),
+      events (
+        short_id
       )
     `)
     .or(`public_code.eq.${tag},id.eq.${tag}`)
     .limit(1)
     .maybeSingle();
 
-  // Redirect til /e/{eventId}/t/{tagId} for per-event App Clip Experience support
+  // Redirect til /e/{short_id}/t/{tag} for per-event App Clip Experience support
+  const eventShortId = (data?.events as { short_id?: number } | null)?.short_id;
+
   // Ny arkitektur: event_id fra event_profiles
   if (data?.event_profile_id && data?.event_profiles) {
     const ep = Array.isArray(data.event_profiles)
       ? data.event_profiles[0]
       : data.event_profiles;
     if (ep?.event_id) {
-      redirect(`/e/${ep.event_id}/t/${tag}`);
+      redirect(`/e/${eventShortId ?? ep.event_id}/t/${tag}`);
     }
   }
 
   // Gammel arkitektur fallback: event_id direkte fra nfc_tags
   if (data?.event_id) {
-    redirect(`/e/${data.event_id}/t/${tag}`);
+    redirect(`/e/${eventShortId ?? data.event_id}/t/${tag}`);
   }
 
   // Tag ikke fundet
