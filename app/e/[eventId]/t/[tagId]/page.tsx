@@ -8,6 +8,12 @@ export default async function EventTagPage({
   const { eventId, tagId } = await params;
 
   // Look up tag by public_code or UUID — eventId used for display only, not for lookup
+  // Only include id lookup when tagId is a valid UUID (avoids Postgres cast error)
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(tagId);
+  const orFilter = isUUID
+    ? `public_code.eq.${tagId},id.eq.${tagId}`
+    : `public_code.eq.${tagId}`;
+
   const { data: tag } = await supabase
     .from("nfc_tags")
     .select(`
@@ -22,7 +28,7 @@ export default async function EventTagPage({
         profiles ( display_name, avatar_url )
       )
     `)
-    .or(`public_code.eq.${tagId},id.eq.${tagId}`)
+    .or(orFilter)
     .limit(1)
     .maybeSingle();
 

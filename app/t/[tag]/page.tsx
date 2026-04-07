@@ -9,6 +9,12 @@ export default async function TagPage({
   const { tag } = await params;
 
   // Prøv public_code først, derefter UUID (bagudkompatibilitet)
+  // Only include id lookup when tag is a valid UUID (avoids Postgres cast error)
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(tag);
+  const orFilter = isUUID
+    ? `public_code.eq.${tag},id.eq.${tag}`
+    : `public_code.eq.${tag}`;
+
   const { data } = await supabase
     .from("nfc_tags")
     .select(`
@@ -23,7 +29,7 @@ export default async function TagPage({
         short_id
       )
     `)
-    .or(`public_code.eq.${tag},id.eq.${tag}`)
+    .or(orFilter)
     .limit(1)
     .maybeSingle();
 
