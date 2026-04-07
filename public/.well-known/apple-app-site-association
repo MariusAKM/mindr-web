@@ -2,15 +2,16 @@
   "applinks": {
     "details": [
       {
-        "appIDs": ["R3G6KKKSD9.com.mycompany.mindr", "R3G6KKKSD9.com.mycompany.mindrclip"],
+        "appIDs": ["R3G6KKKSD9.com.mycompany.mindr"],
         "components": [
           { "/": "/t/*", "comment": "NFC tag resolver" },
-          { "/": "/e/*", "comment": "Event/profile canonical links" }
+          { "/": "/e/*", "comment": "Event/profile canonical links" },
+          { "/": "/open", "comment": "Event open link" }
         ]
       }
     ]
   },
   "appclips": {
-    "apps": ["R3G6KKKSD9.com.mycompany.mindr.Clip", "R3G6KKKSD9.com.mycompany.mindrclip.Clip"]
+    "apps": ["R3G6KKKSD9.com.mycompany.mindr.Clip"]
   }
 }

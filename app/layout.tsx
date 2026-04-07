@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   // appleWebApp bruges som fallback indtil App Store ID kendes
   other: {
     "apple-itunes-app":
-      "app-clip-bundle-id=com.mycompany.mindrclip.Clip, app-clip-display=card",
+      "app-clip-bundle-id=com.mycompany.mindr.Clip, app-clip-display=card",
   },
 };
 

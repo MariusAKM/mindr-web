@@ -24,19 +24,20 @@ export default async function TagPage({
     .limit(1)
     .maybeSingle();
 
-  // Ny arkitektur: brug event_profile_id
+  // Redirect til /e/{eventId}/t/{tagId} for per-event App Clip Experience support
+  // Ny arkitektur: event_id fra event_profiles
   if (data?.event_profile_id && data?.event_profiles) {
     const ep = Array.isArray(data.event_profiles)
       ? data.event_profiles[0]
       : data.event_profiles;
     if (ep?.event_id) {
-      redirect(`/e/${ep.event_id}/p/${data.event_profile_id}`);
+      redirect(`/e/${ep.event_id}/t/${tag}`);
     }
   }
 
-  // Gammel arkitektur fallback: brug event_id + owner direkte fra nfc_tags
-  if (data?.event_id && data?.id) {
-    redirect(`/e/${data.event_id}/p/${data.id}`);
+  // Gammel arkitektur fallback: event_id direkte fra nfc_tags
+  if (data?.event_id) {
+    redirect(`/e/${data.event_id}/t/${tag}`);
   }
 
   // Tag ikke fundet
