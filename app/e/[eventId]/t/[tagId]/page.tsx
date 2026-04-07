@@ -34,6 +34,18 @@ export default async function EventTagPage({
     .eq(isNumeric ? "short_id" : "id", eventId)
     .maybeSingle();
 
+  // Tag ikke fundet → 404
+  if (!tag) {
+    return (
+      <main style={{ display: "flex", flexDirection: "column", alignItems: "center",
+        justifyContent: "center", minHeight: "100vh", fontFamily: "sans-serif",
+        background: "#0e0e10", color: "#fff", gap: 12 }}>
+        <h1 style={{ fontSize: 28, fontWeight: 700, margin: 0 }}>MINDR</h1>
+        <p style={{ color: "#888", margin: 0 }}>Ukendt armbånd.</p>
+      </main>
+    );
+  }
+
   const bg    = event?.background_url ?? null;
   const theme = event?.theme_color ?? "#0E410E";
 
